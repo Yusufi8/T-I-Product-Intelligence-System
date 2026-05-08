@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Odoo/local runtime
+*.log
+*.pid
+*.pot
+*.pyc
+.coverage
+.pytest_cache/
+
+# IDE/editor
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
+
