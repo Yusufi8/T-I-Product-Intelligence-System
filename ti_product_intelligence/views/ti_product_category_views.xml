@@ -1,0 +1,73 @@
+<odoo>
+    <record id="view_ti_product_category_tree" model="ir.ui.view">
+        <field name="name">ti.product.category.tree</field>
+        <field name="model">ti.product.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="product_type"/>
+                <field name="categ_id"/>
+                <field name="uid_rule_id"/>
+                <field name="requires_attachment"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ti_product_category_form" model="ir.ui.view">
+        <field name="name">ti.product.category.form</field>
+        <field name="model">ti.product.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="product_type"/>
+                            <field name="categ_id"/>
+                            <field name="uid_rule_id"/>
+                        </group>
+                        <group>
+                            <field name="duplicate_threshold"/>
+                            <field name="review_threshold"/>
+                            <field name="requires_attachment"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Technical Specifications">
+                            <field name="attribute_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="data_type"/>
+                                    <field name="mandatory"/>
+                                    <field name="uid_token"/>
+                                    <field name="search_weight"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ti_product_category" model="ir.actions.act_window">
+        <field name="name">PIS Categories</field>
+        <field name="res_model">ti.product.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
+

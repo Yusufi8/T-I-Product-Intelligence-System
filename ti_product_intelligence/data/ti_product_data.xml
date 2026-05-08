@@ -1,0 +1,171 @@
+<odoo>
+    <record id="product_category_raw_materials" model="product.category">
+        <field name="name">Raw Materials</field>
+    </record>
+
+    <record id="product_category_bought_out" model="product.category">
+        <field name="name">Bought Out Components</field>
+    </record>
+
+    <record id="product_category_finished_goods" model="product.category">
+        <field name="name">Finished Goods</field>
+    </record>
+
+    <record id="uid_rule_default" model="ti.product.uid.rule">
+        <field name="name">Default Category Spec UID</field>
+        <field name="template">{type}-{category}-{specs}-{seq}</field>
+        <field name="sequence_id" ref="seq_ti_product_uid_default"/>
+    </record>
+
+    <record id="ti_category_motors" model="ti.product.category">
+        <field name="name">Motors</field>
+        <field name="code">MTR</field>
+        <field name="product_type">raw_material</field>
+        <field name="categ_id" ref="product_category_raw_materials"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_bearings" model="ti.product.category">
+        <field name="name">Bearings</field>
+        <field name="code">BRG</field>
+        <field name="product_type">raw_material</field>
+        <field name="categ_id" ref="product_category_raw_materials"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_gearboxes" model="ti.product.category">
+        <field name="name">Gearboxes</field>
+        <field name="code">GBX</field>
+        <field name="product_type">bought_out</field>
+        <field name="categ_id" ref="product_category_bought_out"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_sprockets" model="ti.product.category">
+        <field name="name">Sprockets</field>
+        <field name="code">SPK</field>
+        <field name="product_type">raw_material</field>
+        <field name="categ_id" ref="product_category_raw_materials"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_heat_exchangers" model="ti.product.category">
+        <field name="name">Heat Exchangers</field>
+        <field name="code">HEX</field>
+        <field name="product_type">bought_out</field>
+        <field name="categ_id" ref="product_category_bought_out"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_conveyor_belts" model="ti.product.category">
+        <field name="name">Conveyor Belts</field>
+        <field name="code">CONV</field>
+        <field name="product_type">finished_goods</field>
+        <field name="categ_id" ref="product_category_finished_goods"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="ti_category_customized" model="ti.product.category">
+        <field name="name">Customized Components</field>
+        <field name="code">CUST</field>
+        <field name="product_type">bought_out</field>
+        <field name="categ_id" ref="product_category_bought_out"/>
+        <field name="uid_rule_id" ref="uid_rule_default"/>
+        <field name="requires_attachment">1</field>
+    </record>
+
+    <record id="attr_motor_hp" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_motors"/>
+        <field name="name">HP</field>
+        <field name="code">HP</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="attr_motor_pole" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_motors"/>
+        <field name="name">Pole</field>
+        <field name="code">POLE</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="attr_motor_mounting" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_motors"/>
+        <field name="name">Mounting</field>
+        <field name="code">MOUNT</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="attr_motor_voltage" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_motors"/>
+        <field name="name">Voltage</field>
+        <field name="code">VOLT</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="attr_motor_frequency" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_motors"/>
+        <field name="name">Frequency</field>
+        <field name="code">FREQ</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="attr_bearing_type" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_bearings"/>
+        <field name="name">Type</field>
+        <field name="code">TYPE</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="attr_bearing_model" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_bearings"/>
+        <field name="name">Model</field>
+        <field name="code">MODEL</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="attr_bearing_size" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_bearings"/>
+        <field name="name">Size</field>
+        <field name="code">SIZE</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="attr_sprocket_teeth" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_sprockets"/>
+        <field name="name">Teeth</field>
+        <field name="code">TEETH</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="attr_sprocket_pitch" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_sprockets"/>
+        <field name="name">Pitch</field>
+        <field name="code">PITCH</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="attr_sprocket_strand" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_sprockets"/>
+        <field name="name">Strand</field>
+        <field name="code">STRAND</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="attr_sprocket_moc" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_sprockets"/>
+        <field name="name">MOC</field>
+        <field name="code">MOC</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="attr_heat_capacity" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_heat_exchangers"/>
+        <field name="name">Capacity</field>
+        <field name="code">CAP</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="attr_heat_temperature" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_heat_exchangers"/>
+        <field name="name">Temperature</field>
+        <field name="code">TEMP</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="attr_heat_pressure" model="ti.product.attribute">
+        <field name="category_id" ref="ti_category_heat_exchangers"/>
+        <field name="name">Pressure</field>
+        <field name="code">PRESS</field>
+        <field name="sequence">30</field>
+    </record>
+</odoo>
+

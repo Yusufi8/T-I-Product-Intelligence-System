@@ -1,0 +1,85 @@
+<odoo>
+    <record id="view_product_template_pis_form" model="ir.ui.view">
+        <field name="name">product.template.pis.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_duplicate_logs" type="object" class="oe_stat_button" icon="fa-copy">
+                    <field name="ti_duplicate_count" widget="statinfo" string="Duplicates"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="ti_uid" readonly="1"/>
+                <field name="ti_legacy_ref" readonly="1"/>
+                <field name="ti_governance_state"/>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="T&amp;I Product Intelligence">
+                    <group>
+                        <field name="ti_category_id"/>
+                        <field name="ti_brand"/>
+                        <field name="ti_primary_vendor_id"/>
+                    </group>
+                    <group>
+                        <field name="ti_latest_cost_price" groups="ti_product_intelligence.group_ti_price_cost,ti_product_intelligence.group_ti_product_manager"/>
+                        <field name="ti_latest_sale_price" groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager"/>
+                        <field name="ti_margin_percent" groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="PIS Technical Specs">
+                    <field name="ti_spec_line_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="attribute_id" domain="[('category_id', '=', parent.ti_category_id)]"/>
+                            <field name="value_char"/>
+                            <field name="value_float"/>
+                            <field name="value_id"/>
+                            <field name="display_value" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="PIS Aliases">
+                    <field name="ti_alias_ids">
+                        <tree editable="bottom">
+                            <field name="alias_type"/>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="normalized_name" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_template_pis_search" model="ir.ui.view">
+        <field name="name">product.template.pis.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="ti_uid"/>
+                <field name="ti_legacy_ref"/>
+                <field name="ti_category_id"/>
+                <filter name="pis_approved" string="PIS Approved" domain="[('ti_governance_state','=','approved')]"/>
+                <filter name="pis_pending" string="PIS Pending Review" domain="[('ti_governance_state','=','pending_review')]"/>
+                <group expand="0" string="PIS">
+                    <filter name="group_ti_category" string="PIS Category" context="{'group_by':'ti_category_id'}"/>
+                    <filter name="group_ti_state" string="Governance State" context="{'group_by':'ti_governance_state'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ti_product_templates" model="ir.actions.act_window">
+        <field name="name">Governed Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('ti_category_id', '!=', False)]</field>
+        <field name="context">{'search_default_group_ti_category': 1}</field>
+    </record>
+</odoo>
+

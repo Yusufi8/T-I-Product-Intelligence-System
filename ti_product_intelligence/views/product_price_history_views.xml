@@ -1,0 +1,76 @@
+<odoo>
+    <record id="view_product_cost_history_tree" model="ir.ui.view">
+        <field name="name">product.cost.history.tree</field>
+        <field name="model">product.cost.history</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="product_tmpl_id"/>
+                <field name="partner_id"/>
+                <field name="old_price"/>
+                <field name="new_price"/>
+                <field name="quantity"/>
+                <field name="source_document"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_cost_history_graph" model="ir.ui.view">
+        <field name="name">product.cost.history.graph</field>
+        <field name="model">product.cost.history</field>
+        <field name="arch" type="xml">
+            <graph string="Cost Price History" type="line">
+                <field name="date" interval="month"/>
+                <field name="new_price" type="measure"/>
+                <field name="product_tmpl_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_product_sale_price_history_tree" model="ir.ui.view">
+        <field name="name">product.sale.price.history.tree</field>
+        <field name="model">product.sale.price.history</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="product_tmpl_id"/>
+                <field name="partner_id"/>
+                <field name="old_price"/>
+                <field name="new_price"/>
+                <field name="margin_percent"/>
+                <field name="quantity"/>
+                <field name="source_document"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_sale_price_history_graph" model="ir.ui.view">
+        <field name="name">product.sale.price.history.graph</field>
+        <field name="model">product.sale.price.history</field>
+        <field name="arch" type="xml">
+            <graph string="Sale Price History" type="line">
+                <field name="date" interval="month"/>
+                <field name="new_price" type="measure"/>
+                <field name="margin_percent" type="measure"/>
+                <field name="product_tmpl_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_product_cost_history" model="ir.actions.act_window">
+        <field name="name">Cost Price History</field>
+        <field name="res_model">product.cost.history</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="groups_id" eval="[(4, ref('ti_product_intelligence.group_ti_price_cost')), (4, ref('ti_product_intelligence.group_ti_product_manager'))]"/>
+    </record>
+
+    <record id="action_product_sale_price_history" model="ir.actions.act_window">
+        <field name="name">Selling Price History</field>
+        <field name="res_model">product.sale.price.history</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="groups_id" eval="[(4, ref('ti_product_intelligence.group_ti_price_sale')), (4, ref('ti_product_intelligence.group_ti_product_manager'))]"/>
+    </record>
+</odoo>
+
