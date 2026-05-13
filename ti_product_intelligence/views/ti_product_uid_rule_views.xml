@@ -27,6 +27,7 @@
                     <group>
                         <field name="category_id"/>
                         <field name="template"/>
+                        <field name="specs_separator"/>
                         <field name="sequence_id"/>
                         <field name="sequence_padding"/>
                         <field name="active"/>
@@ -43,4 +44,3 @@
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>
-
