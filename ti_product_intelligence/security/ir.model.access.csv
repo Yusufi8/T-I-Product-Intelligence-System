@@ -24,5 +24,12 @@ access_product_sale_price_history_manager,product.sale.price.history manager,mod
 access_ti_product_creation_wizard,ti.product.creation.wizard,model_ti_product_creation_wizard,group_ti_product_user,1,1,1,1
 access_ti_product_creation_spec_wizard,ti.product.creation.spec.wizard,model_ti_product_creation_spec_wizard,group_ti_product_user,1,1,1,1
 access_ti_product_creation_duplicate_wizard,ti.product.creation.duplicate.wizard,model_ti_product_creation_duplicate_wizard,group_ti_product_user,1,1,1,1
+access_ti_product_bom_wizard_steward,ti.product.bom.wizard steward,model_ti_product_bom_wizard,group_ti_product_steward,1,1,1,1
+access_ti_product_bom_wizard_line_steward,ti.product.bom.wizard.line steward,model_ti_product_bom_wizard_line,group_ti_product_steward,1,1,1,1
+access_ti_product_bom_wizard_manager,ti.product.bom.wizard manager,model_ti_product_bom_wizard,group_ti_product_manager,1,1,1,1
+access_ti_product_bom_wizard_line_manager,ti.product.bom.wizard.line manager,model_ti_product_bom_wizard_line,group_ti_product_manager,1,1,1,1
 access_ti_product_merge_wizard,ti.product.merge.wizard,model_ti_product_merge_wizard,group_ti_product_steward,1,1,1,1
 access_ti_product_migration_wizard,ti.product.migration.wizard,model_ti_product_migration_wizard,group_ti_product_steward,1,1,1,1
+access_ti_missing_spec_report_user,ti.missing.spec.report user,model_ti_missing_spec_report,group_ti_product_user,1,0,0,0
+access_product_slow_move_report_user,product.slow.move.report user,model_product_slow_move_report,group_ti_product_user,1,0,0,0
+access_ti_bom_usage_report_user,ti.bom.usage.report user,model_ti_bom_usage_report,group_ti_product_user,1,0,0,0
