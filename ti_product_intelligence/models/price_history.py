@@ -8,6 +8,7 @@ class ProductCostHistory(models.Model):
     _rec_name = "product_tmpl_id"
 
     product_tmpl_id = fields.Many2one("product.template", required=True, index=True, ondelete="cascade")
+    ti_category_id = fields.Many2one(related="product_tmpl_id.ti_category_id", store=True, index=True)
     product_id = fields.Many2one("product.product", index=True)
     partner_id = fields.Many2one("res.partner", string="Vendor", index=True)
     old_price = fields.Float()
@@ -41,6 +42,7 @@ class ProductSalePriceHistory(models.Model):
     _rec_name = "product_tmpl_id"
 
     product_tmpl_id = fields.Many2one("product.template", required=True, index=True, ondelete="cascade")
+    ti_category_id = fields.Many2one(related="product_tmpl_id.ti_category_id", store=True, index=True)
     product_id = fields.Many2one("product.product", index=True)
     partner_id = fields.Many2one("res.partner", string="Customer", index=True)
     old_price = fields.Float()
@@ -69,4 +71,3 @@ class ProductSalePriceHistory(models.Model):
             "source_id": source_id,
             "source_document": "%s,%s" % (source_model, source_id),
         })
-
