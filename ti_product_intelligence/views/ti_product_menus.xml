@@ -10,11 +10,18 @@
     <menuitem id="menu_ti_product_governance_dashboard" name="Governance Dashboard" parent="menu_ti_product_dashboards" action="action_ti_product_governance_dashboard" sequence="10"/>
     <menuitem id="menu_ti_product_cost_history" name="Cost Price History" parent="menu_ti_product_dashboards" action="action_product_cost_history" sequence="20" groups="ti_product_intelligence.group_ti_price_cost,ti_product_intelligence.group_ti_product_manager"/>
     <menuitem id="menu_ti_product_sale_history" name="Selling Price History" parent="menu_ti_product_dashboards" action="action_product_sale_price_history" sequence="30" groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager"/>
+    <menuitem id="menu_ti_duplicate_report" name="Duplicate Count by Category" parent="menu_ti_product_dashboards" action="action_ti_duplicate_report" sequence="40"/>
+    <menuitem id="menu_ti_slow_move_report" name="Slow-Moving Inventory" parent="menu_ti_product_dashboards" action="action_product_slow_move_report" sequence="50"/>
+    <menuitem id="menu_ti_vendor_price_mapping" name="Vendor Product Price Mapping" parent="menu_ti_product_dashboards" action="action_ti_vendor_product_price_mapping" sequence="60" groups="ti_product_intelligence.group_ti_price_cost,ti_product_intelligence.group_ti_product_manager"/>
+    <menuitem id="menu_ti_ungoverned_products" name="Ungoverned Products" parent="menu_ti_product_dashboards" action="action_ti_ungoverned_products" sequence="70"/>
+    <menuitem id="menu_ti_missing_specs" name="Missing Mandatory Specs" parent="menu_ti_product_dashboards" action="action_ti_missing_spec_report" sequence="80"/>
+    <menuitem id="menu_ti_bom_usage" name="BOM Usage" parent="menu_ti_product_dashboards" action="action_ti_bom_usage_report" sequence="90"/>
+    <menuitem id="menu_ti_sales_margin" name="Sales Margin Analysis" parent="menu_ti_product_dashboards" action="action_ti_sales_margin_analysis" sequence="100" groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager"/>
 
     <menuitem id="menu_ti_product_configuration" name="Configuration" parent="menu_ti_product_root" sequence="90" groups="ti_product_intelligence.group_ti_product_steward,ti_product_intelligence.group_ti_product_manager"/>
     <menuitem id="menu_ti_product_categories" name="PIS Categories" parent="menu_ti_product_configuration" action="action_ti_product_category" sequence="10"/>
     <menuitem id="menu_ti_product_uid_rules" name="UID Rules" parent="menu_ti_product_configuration" action="action_ti_product_uid_rule" sequence="20"/>
     <menuitem id="menu_ti_product_migration" name="Migration Cleanup" parent="menu_ti_product_configuration" action="action_ti_product_migration_wizard" sequence="30"/>
     <menuitem id="menu_ti_product_merge" name="Merge Duplicates" parent="menu_ti_product_configuration" action="action_ti_product_merge_wizard" sequence="40"/>
+    <menuitem id="menu_ti_product_bom_wizard" name="Create BOM" parent="menu_ti_product_configuration" action="action_ti_product_bom_wizard" sequence="50"/>
 </odoo>
-
