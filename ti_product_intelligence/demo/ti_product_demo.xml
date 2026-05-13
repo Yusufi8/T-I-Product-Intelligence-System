@@ -6,7 +6,11 @@
         <field name="ti_category_id" ref="ti_category_bearings"/>
         <field name="ti_uid">RM-BRG-6007ZZ-001</field>
         <field name="default_code">RM-BRG-6007ZZ-001</field>
+        <field name="ti_spec_line_ids" eval="[
+            (0, 0, {'attribute_id': ref('attr_bearing_type'), 'value_char': 'Deep Groove'}),
+            (0, 0, {'attribute_id': ref('attr_bearing_model'), 'value_char': '6007 ZZ'}),
+            (0, 0, {'attribute_id': ref('attr_bearing_size'), 'value_char': '35x62x14'})
+        ]"/>
         <field name="ti_governance_state">approved</field>
     </record>
 </odoo>
-
