@@ -49,6 +49,25 @@
         </field>
     </record>
 
+    <record id="view_ti_product_duplicate_log_search" model="ir.ui.view">
+        <field name="name">ti.product.duplicate.log.search</field>
+        <field name="model">ti.product.duplicate.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_tmpl_id"/>
+                <field name="duplicate_product_tmpl_id"/>
+                <field name="category_id"/>
+                <filter name="open" string="Open" domain="[('state','in',['new','review','blocked'])]"/>
+                <filter name="blocked" string="Hard Blocked" domain="[('state','=','blocked')]"/>
+                <filter name="review" string="Needs Review" domain="[('state','=','review')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_ti_product_duplicate_log" model="ir.actions.act_window">
         <field name="name">Duplicate Review</field>
         <field name="res_model">ti.product.duplicate.log</field>
@@ -56,4 +75,3 @@
         <field name="context">{'search_default_open': 1}</field>
     </record>
 </odoo>
-
