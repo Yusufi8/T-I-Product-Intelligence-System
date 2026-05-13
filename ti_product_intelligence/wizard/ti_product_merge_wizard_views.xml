@@ -1,0 +1,29 @@
+<odoo>
+    <record id="view_ti_product_merge_wizard_form" model="ir.ui.view">
+        <field name="name">ti.product.merge.wizard.form</field>
+        <field name="model">ti.product.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Merge Duplicate Products">
+                <sheet>
+                    <group>
+                        <field name="source_product_tmpl_id"/>
+                        <field name="target_product_tmpl_id"/>
+                        <field name="reason"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_merge" type="object" string="Merge and Archive Duplicate" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ti_product_merge_wizard" model="ir.actions.act_window">
+        <field name="name">Merge Duplicates</field>
+        <field name="res_model">ti.product.merge.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
+
