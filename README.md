@@ -1,40 +1,39 @@
-# T&I Product Intelligence System for Odoo 16
+# T&I Product Intelligence System
 
-Enterprise product governance addon for T&I Projects Limited.
+`ti_product_intelligence` is an Odoo 16 addon for product master data governance at T&I Projects Limited.
 
-This repository contains the Odoo 16 module `ti_product_intelligence`, designed for product master data governance, intelligent UID generation, duplicate prevention, technical specification standardization, PO/SO search acceleration, price history, and Purchase/Sales/Inventory/Manufacturing integration.
+## What It Implements
 
-## Module
+- Controlled product creation wizard for governed products.
+- Category-specific technical specification templates.
+- Configurable UID generation rules using product type, category, specs, brand, vendor, and sequence.
+- Duplicate detection using normalized names, aliases, vendor codes, category, and technical specs.
+- Legacy internal reference preservation through `ti_legacy_ref` and `ti.product.alias`.
+- Product search extension for UID, legacy reference, aliases, and normalized specification text.
+- Cost and sale price history models populated from product price edits, purchase confirmations, and sale confirmations.
+- Security groups for Sales, Purchase, Inventory, Manufacturing, Product Stewards, and Director/Admin.
+- Product governance dashboards using Odoo graph and pivot views.
+- Migration and merge wizards for legacy cleanup.
 
-Copy `ti_product_intelligence` into an Odoo 16 addons path, update the app list, then install **T&I Product Intelligence System**.
+## Operational Workflow
 
-Required Odoo apps:
+1. Configure PIS categories and technical specifications.
+2. Configure or reuse UID rules.
+3. Assign users to PIS security groups.
+4. Use **Product Intelligence > Operations > Create Governed Product** or the PO/SO governed product button.
+5. Run duplicate check before creation.
+6. Product Stewards review blocked or medium-confidence duplicate logs.
+7. Run migration cleanup in batches for existing `product.template` records.
 
-- Product
-- Purchase
-- Sales
-- Inventory
-- Manufacturing
-- Discuss/Mail
+## Migration Policy
 
-## Main Capabilities
+Existing `default_code` values are preserved in `ti_legacy_ref` and as `ti.product.alias` records. PIS UID assignment is generated separately so legacy references remain searchable and auditable.
 
-- Governed product creation wizard.
-- Category-driven technical specifications.
-- Configurable UID rules.
-- Duplicate detection and duplicate review logs.
-- Legacy internal reference preservation.
-- Alias, vendor code, and spec-based product search.
-- Cost and selling price history.
-- Role-based price visibility.
-- Product governance dashboards.
-- Legacy migration cleanup and merge wizards.
+## Performance Notes
 
-## Validation Performed
+The module stores normalized search fields and creates PostgreSQL GIN indexes for specification and keyword search text. Duplicate scans are batched by scheduled action to avoid large synchronous jobs.
 
-- Python syntax compilation.
-- XML well-formedness validation.
-- Manifest file existence validation.
+## Test Coverage
 
-Full Odoo installation tests should be run inside an Odoo 16 database with `sale_management`, `purchase`, `stock`, and `mrp` installed.
+The included transaction tests cover UID generation, legacy reference preservation, duplicate similarity for reordered product names, and wizard duplicate detection.
 
