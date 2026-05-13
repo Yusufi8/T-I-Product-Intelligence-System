@@ -44,6 +44,26 @@ def slug_token(value):
     return re.sub(r"[^A-Z0-9]+", "", value)
 
 
+def odoo_product_type_from_pis(product_type):
+    return {
+        "raw_material": "product",
+        "bought_out": "product",
+        "finished_goods": "product",
+        "consumable": "consu",
+        "service": "service",
+    }.get(product_type or "raw_material", "product")
+
+
+def governance_badge_class(state):
+    return {
+        "approved": "success",
+        "pending_review": "warning",
+        "blocked": "danger",
+        "draft": "secondary",
+        "archived": "muted",
+    }.get(state or "draft", "secondary")
+
+
 class TiProductCategory(models.Model):
     _name = "ti.product.category"
     _description = "PIS Product Category Profile"
@@ -175,6 +195,7 @@ class TiProductUidRule(models.Model):
     )
     sequence_id = fields.Many2one("ir.sequence", required=True)
     sequence_padding = fields.Integer(default=3)
+    specs_separator = fields.Char(default="-", help="Separator used between specification tokens in {specs}.")
 
     def generate_uid(self, category, spec_values=None, brand=None, vendor=None):
         self.ensure_one()
@@ -195,7 +216,7 @@ class TiProductUidRule(models.Model):
         token_map = {
             "type": product_type,
             "category": slug_token(category.code),
-            "specs": "-".join(spec_tokens),
+            "specs": (self.specs_separator or "").join(spec_tokens),
             "brand": slug_token(brand),
             "vendor": slug_token(vendor),
             "seq": str(seq).zfill(self.sequence_padding) if str(seq).isdigit() else str(seq),
@@ -291,6 +312,30 @@ class TiProductDuplicateLog(models.Model):
     def action_dismiss(self):
         self.write({"state": "dismissed"})
 
+    def _notify_stewards(self):
+        activity_type = self.env.ref("mail.mail_activity_data_warning", raise_if_not_found=False) or self.env.ref("mail.mail_activity_data_todo")
+        steward_group = self.env.ref("ti_product_intelligence.group_ti_product_steward", raise_if_not_found=False)
+        manager_group = self.env.ref("ti_product_intelligence.group_ti_product_manager", raise_if_not_found=False)
+        users = (steward_group.users if steward_group else self.env["res.users"]) | (manager_group.users if manager_group else self.env["res.users"])
+        template = self.env.ref("ti_product_intelligence.mail_template_ti_duplicate_alert", raise_if_not_found=False)
+        for log in self:
+            summary = _("PIS duplicate score %(score).2f: %(product)s") % {
+                "score": log.score,
+                "product": log.product_tmpl_id.display_name or log.name,
+            }
+            for user in users:
+                self.env["mail.activity"].sudo().create({
+                    "activity_type_id": activity_type.id,
+                    "res_model_id": self.env["ir.model"]._get_id(log._name),
+                    "res_id": log.id,
+                    "user_id": user.id,
+                    "summary": summary,
+                    "note": log.reason or "",
+                })
+            if template and log.score >= 85:
+                for user in users.filtered("partner_id.email"):
+                    template.sudo().send_mail(log.id, email_values={"email_to": user.partner_id.email}, force_send=False)
+
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -312,6 +357,7 @@ class ProductTemplate(models.Model):
         index=True,
         tracking=True,
     )
+    ti_product_type = fields.Selection(related="ti_category_id.product_type", string="PIS Product Type", store=True)
     ti_spec_line_ids = fields.One2many("ti.product.spec.line", "product_tmpl_id", string="Technical Specifications")
     ti_alias_ids = fields.One2many("ti.product.alias", "product_tmpl_id", string="Aliases")
     ti_normalized_name = fields.Char(compute="_compute_ti_search_fields", store=True, index=True)
@@ -321,6 +367,12 @@ class ProductTemplate(models.Model):
     ti_latest_cost_price = fields.Float(compute="_compute_ti_prices", groups="ti_product_intelligence.group_ti_price_cost,ti_product_intelligence.group_ti_product_manager")
     ti_latest_sale_price = fields.Float(compute="_compute_ti_prices", groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager")
     ti_margin_percent = fields.Float(compute="_compute_ti_prices", groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager")
+    ti_spec_summary = fields.Char(compute="_compute_ti_search_fields", store=True)
+    ti_gov_badge_class = fields.Char(compute="_compute_ti_gov_badge_class")
+    ti_revision = fields.Char(default="Rev.A", tracking=True)
+    ti_revision_date = fields.Date(tracking=True)
+    ti_revision_note = fields.Text(tracking=True)
+    last_duplicate_scan_date = fields.Datetime(index=True)
 
     _sql_constraints = [
         ("ti_uid_unique", "unique(ti_uid)", "The PIS UID/internal reference must be unique."),
@@ -329,6 +381,12 @@ class ProductTemplate(models.Model):
     def init(self):
         self.env.cr.execute("CREATE INDEX IF NOT EXISTS product_template_ti_keyword_search_idx ON product_template USING gin (to_tsvector('simple', coalesce(ti_keyword_search_text, '')))")
         self.env.cr.execute("CREATE INDEX IF NOT EXISTS product_template_ti_spec_search_idx ON product_template USING gin (to_tsvector('simple', coalesce(ti_spec_search_text, '')))")
+        try:
+            with self.env.cr.savepoint():
+                self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+                self.env.cr.execute("CREATE INDEX IF NOT EXISTS product_template_ti_uid_trgm_idx ON product_template USING gin (ti_uid gin_trgm_ops)")
+        except Exception:
+            self.env.cr.execute("CREATE INDEX IF NOT EXISTS product_template_ti_uid_idx ON product_template (ti_uid)")
 
     @api.depends(
         "name",
@@ -349,6 +407,7 @@ class ProductTemplate(models.Model):
             alias_parts = product.ti_alias_ids.mapped("name")
             product.ti_normalized_name = normalize_text(" ".join([product.name or "", product.ti_brand or ""]))
             product.ti_spec_search_text = normalize_text(" ".join(spec_parts))
+            product.ti_spec_summary = " ".join(product.ti_spec_line_ids.filtered("display_value").sorted("sequence").mapped("display_value")[:5])
             product.ti_keyword_search_text = normalize_text(" ".join([
                 product.name or "",
                 product.ti_uid or "",
@@ -379,6 +438,11 @@ class ProductTemplate(models.Model):
             product.ti_latest_sale_price = sale.new_price if sale else product.list_price
             product.ti_margin_percent = product.ti_latest_sale_price and ((product.ti_latest_sale_price - product.ti_latest_cost_price) / product.ti_latest_sale_price) * 100 or 0.0
 
+    @api.depends("ti_governance_state")
+    def _compute_ti_gov_badge_class(self):
+        for product in self:
+            product.ti_gov_badge_class = governance_badge_class(product.ti_governance_state)
+
     @api.model_create_multi
     def create(self, vals_list):
         if (
@@ -392,6 +456,9 @@ class ProductTemplate(models.Model):
         for vals in vals_list:
             if vals.get("default_code") and not vals.get("ti_legacy_ref") and not vals.get("ti_uid"):
                 vals["ti_legacy_ref"] = vals["default_code"]
+            if vals.get("ti_category_id") and not vals.get("type"):
+                category = self.env["ti.product.category"].browse(vals["ti_category_id"])
+                vals["type"] = odoo_product_type_from_pis(category.product_type)
         products = super().create(vals_list)
         products._ti_sync_default_code()
         products._ti_create_legacy_alias()
@@ -411,6 +478,46 @@ class ProductTemplate(models.Model):
                 if "list_price" in vals and product.list_price != old_sale:
                     self.env["product.sale.price.history"].sudo().create_from_price_change(product, old_sale, product.list_price, "product.template", product.id)
         return result
+
+    def name_get(self):
+        result = []
+        for product in self:
+            label = product.name or ""
+            if product.ti_spec_summary:
+                label = "%s - %s" % (label, product.ti_spec_summary)
+            if product.ti_uid:
+                label = "[%s] %s" % (product.ti_uid, label)
+            elif product.default_code:
+                label = "[%s] %s" % (product.default_code, label)
+            result.append((product.id, label))
+        return result
+
+    @api.model
+    def _name_search(self, name="", args=None, operator="ilike", limit=100, name_get_uid=None):
+        args = args or []
+        if name:
+            normalized = normalize_text(name)
+            exact_domain = expression.OR([
+                [("ti_uid", "=", name)],
+                [("default_code", "=", name)],
+                [("ti_legacy_ref", "=", name)],
+            ])
+            fuzzy_domain = expression.OR([
+                [("ti_uid", "ilike", name)],
+                [("default_code", "ilike", name)],
+                [("ti_legacy_ref", "ilike", name)],
+                [("ti_spec_search_text", "ilike", normalized)],
+                [("ti_keyword_search_text", "ilike", normalized)],
+                [("ti_alias_ids.normalized_name", "ilike", normalized)],
+                [("name", operator, name)],
+            ])
+            exact_ids = self._search(expression.AND([args, exact_domain]), limit=limit, access_rights_uid=name_get_uid)
+            remaining = max(limit - len(exact_ids), 0) if limit else 0
+            if remaining:
+                fuzzy_ids = self._search(expression.AND([args, [("id", "not in", exact_ids)], fuzzy_domain]), limit=remaining, access_rights_uid=name_get_uid)
+                return list(exact_ids) + list(fuzzy_ids)
+            return exact_ids
+        return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _ti_sync_default_code(self):
         for product in self.filtered("ti_uid"):
@@ -498,9 +605,40 @@ class ProductTemplate(models.Model):
             rule = product.ti_category_id.uid_rule_id
             if not rule:
                 raise ValidationError(_("Configure a UID rule for category %s.") % product.ti_category_id.name)
-            spec_values = {line.attribute_id.id: line.display_value for line in product.ti_spec_line_ids}
+            spec_values = {
+                line.attribute_id.id: (line.value_id.code or line.display_value if line.attribute_id.data_type == "selection" else line.display_value)
+                for line in product.ti_spec_line_ids
+            }
             product.ti_uid = rule.generate_uid(product.ti_category_id, spec_values, product.ti_brand, product.ti_primary_vendor_id.name)
         return True
+
+    def action_check_duplicates(self):
+        self._cron_ti_duplicate_scan(force=True)
+        return self.action_open_duplicate_logs() if len(self) == 1 else True
+
+    def action_open_bom_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create BOM"),
+            "res_model": "ti.product.bom.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_product_tmpl_id": self.id},
+        }
+
+    def action_bump_revision(self):
+        for product in self:
+            current = product.ti_revision or "Rev.A"
+            suffix = current.split(".")[-1] if "." in current else "A"
+            next_suffix = chr(ord(suffix[:1].upper() or "A") + 1) if suffix[:1].isalpha() and suffix[:1].upper() < "Z" else "A"
+            next_revision = "Rev.%s" % next_suffix
+            product.write({
+                "ti_revision": next_revision,
+                "ti_revision_date": fields.Date.context_today(product),
+                "ti_revision_note": _("Revision bumped from %s to %s") % (current, next_revision),
+            })
+            product.message_post(body=_("Product revision bumped from %s to %s.") % (current, next_revision))
 
     def action_open_duplicate_logs(self):
         self.ensure_one()
@@ -512,9 +650,11 @@ class ProductTemplate(models.Model):
             "domain": [("product_tmpl_id", "=", self.id)],
         }
 
-    def _cron_ti_duplicate_scan(self):
+    def _cron_ti_duplicate_scan(self, force=False):
         Log = self.env["ti.product.duplicate.log"].sudo()
         for product in self:
+            if not force and product.last_duplicate_scan_date and product.write_date and product.last_duplicate_scan_date >= product.write_date:
+                continue
             candidates = product.ti_find_duplicate_candidates(limit=20)
             review_threshold = product.ti_category_id.review_threshold or 60.0
             duplicate_threshold = product.ti_category_id.duplicate_threshold or 85.0
@@ -528,7 +668,7 @@ class ProductTemplate(models.Model):
                 ])
                 if exists:
                     continue
-                Log.create({
+                log = Log.create({
                     "product_tmpl_id": product.id,
                     "duplicate_product_tmpl_id": item["product"].id,
                     "category_id": product.ti_category_id.id,
@@ -536,6 +676,8 @@ class ProductTemplate(models.Model):
                     "reason": item["reason"],
                     "state": "blocked" if item["score"] >= duplicate_threshold else "review",
                 })
+                log._notify_stewards()
+            product.last_duplicate_scan_date = fields.Datetime.now()
         return True
 
 
@@ -547,6 +689,8 @@ class ProductProduct(models.Model):
         for product in self:
             template = product.product_tmpl_id
             label = template.name
+            if template.ti_spec_summary:
+                label = "%s - %s" % (label, template.ti_spec_summary)
             if template.ti_uid:
                 label = "[%s] %s" % (template.ti_uid, label)
             elif product.default_code:
@@ -559,15 +703,30 @@ class ProductProduct(models.Model):
         args = args or []
         if name:
             normalized = normalize_text(name)
-            template_domain = expression.OR([
-                [("ti_uid", operator, name)],
-                [("default_code", operator, name)],
-                [("ti_legacy_ref", operator, name)],
+            exact_domain = expression.OR([
+                [("ti_uid", "=", name)],
+                [("default_code", "=", name)],
+                [("ti_legacy_ref", "=", name)],
+            ])
+            fuzzy_domain = expression.OR([
+                [("ti_uid", "ilike", name)],
+                [("default_code", "ilike", name)],
+                [("ti_legacy_ref", "ilike", name)],
+                [("ti_spec_search_text", "ilike", normalized)],
                 [("ti_keyword_search_text", "ilike", normalized)],
                 [("ti_alias_ids.normalized_name", "ilike", normalized)],
             ])
-            templates = self.env["product.template"].search(template_domain, limit=limit)
+            templates = self.env["product.template"].search(exact_domain, limit=limit)
+            remaining = max(limit - len(templates), 0) if limit else 0
+            if remaining:
+                templates |= self.env["product.template"].search(expression.AND([[("id", "not in", templates.ids)], fuzzy_domain]), limit=remaining)
             if templates:
                 product_domain = expression.AND([[("product_tmpl_id", "in", templates.ids)], args])
                 return self._search(product_domain, limit=limit, access_rights_uid=name_get_uid)
         return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+
+class ResUsers(models.Model):
+    _inherit = "res.users"
+
+    ti_steward_category_ids = fields.Many2many("ti.product.category", string="PIS Steward Categories")
