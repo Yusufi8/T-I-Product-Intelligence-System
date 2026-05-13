@@ -17,6 +17,13 @@
         <field name="sequence_id" ref="seq_ti_product_uid_default"/>
     </record>
 
+    <record id="uid_rule_fasteners" model="ti.product.uid.rule">
+        <field name="name">Fastener UID Rule</field>
+        <field name="template">{type}-FTNG-{specs}-{seq}</field>
+        <field name="specs_separator"></field>
+        <field name="sequence_id" ref="seq_ti_product_uid_default"/>
+    </record>
+
     <record id="ti_category_motors" model="ti.product.category">
         <field name="name">Motors</field>
         <field name="code">MTR</field>
@@ -167,5 +174,129 @@
         <field name="code">PRESS</field>
         <field name="sequence">30</field>
     </record>
-</odoo>
 
+    <record id="ti_category_chains" model="ti.product.category">
+        <field name="name">Chains</field><field name="code">CHN</field><field name="product_type">raw_material</field><field name="categ_id" ref="product_category_raw_materials"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_belts" model="ti.product.category">
+        <field name="name">Belts</field><field name="code">BLT</field><field name="product_type">raw_material</field><field name="categ_id" ref="product_category_raw_materials"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_fans" model="ti.product.category">
+        <field name="name">Fans</field><field name="code">FAN</field><field name="product_type">bought_out</field><field name="categ_id" ref="product_category_bought_out"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_pumps" model="ti.product.category">
+        <field name="name">Pumps</field><field name="code">PMP</field><field name="product_type">bought_out</field><field name="categ_id" ref="product_category_bought_out"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_fasteners" model="ti.product.category">
+        <field name="name">Bolts/Nuts/Washers</field><field name="code">BLT_FTR</field><field name="product_type">raw_material</field><field name="categ_id" ref="product_category_raw_materials"/><field name="uid_rule_id" ref="uid_rule_fasteners"/>
+    </record>
+    <record id="ti_category_valves" model="ti.product.category">
+        <field name="name">Valves</field><field name="code">VLV</field><field name="product_type">bought_out</field><field name="categ_id" ref="product_category_bought_out"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_seals" model="ti.product.category">
+        <field name="name">Seals/O-rings</field><field name="code">SEAL</field><field name="product_type">raw_material</field><field name="categ_id" ref="product_category_raw_materials"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_couplings" model="ti.product.category">
+        <field name="name">Couplings</field><field name="code">CPLG</field><field name="product_type">bought_out</field><field name="categ_id" ref="product_category_bought_out"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_filters" model="ti.product.category">
+        <field name="name">Filters</field><field name="code">FLTR</field><field name="product_type">raw_material</field><field name="categ_id" ref="product_category_raw_materials"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+    <record id="ti_category_instruments" model="ti.product.category">
+        <field name="name">Sensors/Instruments</field><field name="code">INST</field><field name="product_type">bought_out</field><field name="categ_id" ref="product_category_bought_out"/><field name="uid_rule_id" ref="uid_rule_default"/>
+    </record>
+
+    <record id="attr_chain_pitch" model="ti.product.attribute"><field name="category_id" ref="ti_category_chains"/><field name="name">Pitch</field><field name="code">PITCH</field><field name="sequence">10</field></record>
+    <record id="attr_chain_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_chains"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">20</field><field name="data_type">selection</field></record>
+    <record id="attr_chain_strands" model="ti.product.attribute"><field name="category_id" ref="ti_category_chains"/><field name="name">Strands</field><field name="code">STRANDS</field><field name="sequence">30</field></record>
+    <record id="attr_chain_breaking_load" model="ti.product.attribute"><field name="category_id" ref="ti_category_chains"/><field name="name">Breaking Load kN</field><field name="code">LOAD</field><field name="sequence">40</field><field name="data_type">float</field></record>
+    <record id="attr_chain_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_chains"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">50</field></record>
+
+    <record id="attr_belt_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_belts"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_belt_section" model="ti.product.attribute"><field name="category_id" ref="ti_category_belts"/><field name="name">Section</field><field name="code">SECTION</field><field name="sequence">20</field></record>
+    <record id="attr_belt_length" model="ti.product.attribute"><field name="category_id" ref="ti_category_belts"/><field name="name">Length mm</field><field name="code">LENGTH</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_belt_width" model="ti.product.attribute"><field name="category_id" ref="ti_category_belts"/><field name="name">Width mm</field><field name="code">WIDTH</field><field name="sequence">40</field><field name="data_type">float</field></record>
+    <record id="attr_belt_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_belts"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">50</field></record>
+
+    <record id="attr_fan_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_fan_diameter" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">Diameter mm</field><field name="code">DIA</field><field name="sequence">20</field><field name="data_type">float</field></record>
+    <record id="attr_fan_flow" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">Flow Rate CMH</field><field name="code">FLOW</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_fan_rpm" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">RPM</field><field name="code">RPM</field><field name="sequence">40</field><field name="data_type">float</field></record>
+    <record id="attr_fan_phase" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">Phase</field><field name="code">PHASE</field><field name="sequence">50</field></record>
+    <record id="attr_fan_voltage" model="ti.product.attribute"><field name="category_id" ref="ti_category_fans"/><field name="name">Voltage</field><field name="code">VOLT</field><field name="sequence">60</field></record>
+
+    <record id="attr_pump_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_pump_flow" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Flow Rate LPM</field><field name="code">FLOW</field><field name="sequence">20</field><field name="data_type">float</field></record>
+    <record id="attr_pump_head" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Head m</field><field name="code">HEAD</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_pump_rpm" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">RPM</field><field name="code">RPM</field><field name="sequence">40</field><field name="data_type">float</field></record>
+    <record id="attr_pump_discharge" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Discharge Size mm</field><field name="code">DISCH</field><field name="sequence">50</field></record>
+    <record id="attr_pump_phase" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Phase</field><field name="code">PHASE</field><field name="sequence">60</field></record>
+    <record id="attr_pump_voltage" model="ti.product.attribute"><field name="category_id" ref="ti_category_pumps"/><field name="name">Voltage</field><field name="code">VOLT</field><field name="sequence">70</field></record>
+
+    <record id="attr_fastener_item_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_fasteners"/><field name="name">Item Type</field><field name="code">ITEM</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_fastener_thread" model="ti.product.attribute"><field name="category_id" ref="ti_category_fasteners"/><field name="name">Thread Size</field><field name="code">THREAD</field><field name="sequence">20</field><field name="data_type">selection</field></record>
+    <record id="attr_fastener_length" model="ti.product.attribute"><field name="category_id" ref="ti_category_fasteners"/><field name="name">Length mm</field><field name="code">LENGTH</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_fastener_grade" model="ti.product.attribute"><field name="category_id" ref="ti_category_fasteners"/><field name="name">Grade</field><field name="code">GRADE</field><field name="sequence">40</field><field name="data_type">selection</field></record>
+    <record id="attr_fastener_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_fasteners"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">50</field><field name="data_type">selection</field></record>
+
+    <record id="attr_valve_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_valves"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_valve_size" model="ti.product.attribute"><field name="category_id" ref="ti_category_valves"/><field name="name">Size NB mm</field><field name="code">SIZE</field><field name="sequence">20</field></record>
+    <record id="attr_valve_rating" model="ti.product.attribute"><field name="category_id" ref="ti_category_valves"/><field name="name">Pressure Rating</field><field name="code">RATING</field><field name="sequence">30</field><field name="data_type">selection</field></record>
+    <record id="attr_valve_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_valves"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">40</field><field name="data_type">selection</field></record>
+    <record id="attr_valve_end" model="ti.product.attribute"><field name="category_id" ref="ti_category_valves"/><field name="name">End Connection</field><field name="code">END</field><field name="sequence">50</field><field name="data_type">selection</field></record>
+
+    <record id="attr_seal_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_seals"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_seal_id" model="ti.product.attribute"><field name="category_id" ref="ti_category_seals"/><field name="name">ID mm</field><field name="code">ID</field><field name="sequence">20</field><field name="data_type">float</field></record>
+    <record id="attr_seal_od" model="ti.product.attribute"><field name="category_id" ref="ti_category_seals"/><field name="name">OD mm</field><field name="code">OD</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_seal_width" model="ti.product.attribute"><field name="category_id" ref="ti_category_seals"/><field name="name">Width/Thickness mm</field><field name="code">WIDTH</field><field name="sequence">40</field><field name="data_type">float</field></record>
+    <record id="attr_seal_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_seals"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">50</field><field name="data_type">selection</field></record>
+
+    <record id="attr_coupling_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_couplings"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_coupling_size" model="ti.product.attribute"><field name="category_id" ref="ti_category_couplings"/><field name="name">Size/Series</field><field name="code">SIZE</field><field name="sequence">20</field></record>
+    <record id="attr_coupling_bore" model="ti.product.attribute"><field name="category_id" ref="ti_category_couplings"/><field name="name">Bore Size mm</field><field name="code">BORE</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_coupling_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_couplings"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">40</field><field name="data_type">selection</field></record>
+
+    <record id="attr_filter_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_filters"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_filter_size" model="ti.product.attribute"><field name="category_id" ref="ti_category_filters"/><field name="name">Size/Part No</field><field name="code">SIZE</field><field name="sequence">20</field></record>
+    <record id="attr_filter_micron" model="ti.product.attribute"><field name="category_id" ref="ti_category_filters"/><field name="name">Micron Rating</field><field name="code">MICRON</field><field name="sequence">30</field><field name="data_type">float</field></record>
+    <record id="attr_filter_connection" model="ti.product.attribute"><field name="category_id" ref="ti_category_filters"/><field name="name">Connection Size</field><field name="code">CONN</field><field name="sequence">40</field></record>
+    <record id="attr_filter_moc" model="ti.product.attribute"><field name="category_id" ref="ti_category_filters"/><field name="name">MOC</field><field name="code">MOC</field><field name="sequence">50</field></record>
+
+    <record id="attr_instrument_type" model="ti.product.attribute"><field name="category_id" ref="ti_category_instruments"/><field name="name">Type</field><field name="code">TYPE</field><field name="sequence">10</field><field name="data_type">selection</field></record>
+    <record id="attr_instrument_range" model="ti.product.attribute"><field name="category_id" ref="ti_category_instruments"/><field name="name">Range</field><field name="code">RANGE</field><field name="sequence">20</field></record>
+    <record id="attr_instrument_output" model="ti.product.attribute"><field name="category_id" ref="ti_category_instruments"/><field name="name">Output Type</field><field name="code">OUTPUT</field><field name="sequence">30</field><field name="data_type">selection</field></record>
+    <record id="attr_instrument_connection" model="ti.product.attribute"><field name="category_id" ref="ti_category_instruments"/><field name="name">Process Connection</field><field name="code">CONN</field><field name="sequence">40</field></record>
+    <record id="attr_instrument_make" model="ti.product.attribute"><field name="category_id" ref="ti_category_instruments"/><field name="name">Make/Brand</field><field name="code">MAKE</field><field name="sequence">50</field></record>
+
+    <record id="val_fastener_item_allen" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_item_type"/><field name="name">Allen Bolt</field><field name="code">ABOLT</field></record>
+    <record id="val_fastener_item_hex" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_item_type"/><field name="name">Hex Bolt</field><field name="code">HBOLT</field></record>
+    <record id="val_fastener_item_stud" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_item_type"/><field name="name">Stud</field><field name="code">STUD</field></record>
+    <record id="val_fastener_item_nut" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_item_type"/><field name="name">Nut</field><field name="code">NUT</field></record>
+    <record id="val_fastener_item_washer" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_item_type"/><field name="name">Washer</field><field name="code">WSHR</field></record>
+    <record id="val_fastener_m6" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_thread"/><field name="name">M6</field><field name="code">M6</field></record>
+    <record id="val_fastener_m8" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_thread"/><field name="name">M8</field><field name="code">M8</field></record>
+    <record id="val_fastener_m10" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_thread"/><field name="name">M10</field><field name="code">M10</field></record>
+    <record id="val_fastener_m12" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_thread"/><field name="name">M12</field><field name="code">M12</field></record>
+    <record id="val_fastener_grade_88" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_grade"/><field name="name">8.8</field><field name="code">G88</field></record>
+    <record id="val_fastener_grade_109" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_grade"/><field name="name">10.9</field><field name="code">G109</field></record>
+    <record id="val_fastener_moc_ms" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_moc"/><field name="name">Mild Steel</field><field name="code">MS</field></record>
+    <record id="val_fastener_moc_ss304" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_moc"/><field name="name">Stainless 304</field><field name="code">SS304</field></record>
+    <record id="val_fastener_moc_ss316" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fastener_moc"/><field name="name">Stainless 316</field><field name="code">SS316</field></record>
+
+    <record id="val_chain_type_roller" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_chain_type"/><field name="name">Roller</field><field name="code">ROLLER</field></record>
+    <record id="val_chain_type_silent" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_chain_type"/><field name="name">Silent</field><field name="code">SILENT</field></record>
+    <record id="val_chain_type_leaf" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_chain_type"/><field name="name">Leaf</field><field name="code">LEAF</field></record>
+    <record id="val_belt_type_v" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_belt_type"/><field name="name">V-Belt</field><field name="code">VBELT</field></record>
+    <record id="val_belt_type_flat" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_belt_type"/><field name="name">Flat</field><field name="code">FLAT</field></record>
+    <record id="val_fan_type_axial" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fan_type"/><field name="name">Axial</field><field name="code">AXIAL</field></record>
+    <record id="val_fan_type_centrifugal" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_fan_type"/><field name="name">Centrifugal</field><field name="code">CENT</field></record>
+    <record id="val_pump_type_centrifugal" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_pump_type"/><field name="name">Centrifugal</field><field name="code">CENT</field></record>
+    <record id="val_pump_type_gear" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_pump_type"/><field name="name">Gear</field><field name="code">GEAR</field></record>
+    <record id="val_valve_type_ball" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_valve_type"/><field name="name">Ball</field><field name="code">BALL</field></record>
+    <record id="val_valve_type_gate" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_valve_type"/><field name="name">Gate</field><field name="code">GATE</field></record>
+    <record id="val_seal_type_oring" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_seal_type"/><field name="name">O-Ring</field><field name="code">ORING</field></record>
+    <record id="val_coupling_type_jaw" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_coupling_type"/><field name="name">Jaw</field><field name="code">JAW</field></record>
+    <record id="val_filter_type_oil" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_filter_type"/><field name="name">Oil Filter</field><field name="code">OIL</field></record>
+    <record id="val_instrument_type_pressure" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_instrument_type"/><field name="name">Pressure</field><field name="code">PRESS</field></record>
+    <record id="val_instrument_output_420" model="ti.product.attribute.value"><field name="attribute_id" ref="attr_instrument_output"/><field name="name">4-20mA</field><field name="code">420MA</field></record>
+</odoo>
