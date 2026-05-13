@@ -18,6 +18,7 @@
         "security/security.xml",
         "security/ir.model.access.csv",
         "data/ir_sequence_data.xml",
+        "data/mail_template_data.xml",
         "data/ti_product_data.xml",
         "data/ir_cron_data.xml",
         "views/ti_product_category_views.xml",
@@ -26,10 +27,13 @@
         "views/ti_product_duplicate_views.xml",
         "views/product_price_history_views.xml",
         "views/ti_product_dashboard_views.xml",
+        "views/ti_product_report_views.xml",
         "wizard/ti_product_creation_wizard_views.xml",
+        "wizard/ti_product_bom_wizard_views.xml",
         "wizard/ti_product_merge_wizard_views.xml",
         "wizard/ti_product_migration_wizard_views.xml",
         "views/purchase_sale_views.xml",
+        "views/stock_mrp_views.xml",
         "views/ti_product_menus.xml",
     ],
     "demo": [
@@ -38,4 +42,3 @@
     "application": True,
     "installable": True,
 }
-
