@@ -1,0 +1,17 @@
+<odoo>
+    <record id="mail_template_ti_duplicate_alert" model="mail.template">
+        <field name="name">PIS Duplicate Alert</field>
+        <field name="model_id" ref="model_ti_product_duplicate_log"/>
+        <field name="subject">PIS Duplicate Alert: ${object.product_tmpl_id.display_name or object.name} blocked pending review</field>
+        <field name="email_from">${(user.email_formatted or '')|safe}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>A Product Intelligence duplicate was detected.</p>
+                <p><strong>Product:</strong> <t t-out="object.product_tmpl_id.display_name"/></p>
+                <p><strong>Possible duplicate:</strong> <t t-out="object.duplicate_product_tmpl_id.display_name"/></p>
+                <p><strong>Score:</strong> <t t-out="object.score"/></p>
+                <p><strong>Reason:</strong> <t t-out="object.reason"/></p>
+            </div>
+        </field>
+    </record>
+</odoo>

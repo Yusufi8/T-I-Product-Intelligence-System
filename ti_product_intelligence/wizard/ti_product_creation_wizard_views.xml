@@ -1,0 +1,160 @@
+<odoo>
+    <record id="view_ti_product_creation_wizard_form" model="ir.ui.view">
+        <field name="name">ti.product.creation.wizard.form</field>
+        <field name="model">ti.product.creation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Governed Product">
+                <field name="source_model" invisible="1"/>
+                <field name="source_res_id" invisible="1"/>
+                <field name="is_sale_source" invisible="1"/>
+                <field name="is_purchase_source" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Add Governed Product</h2>
+                        <p class="text-muted">Search first, select an existing governed product when possible, or create through PIS controls.</p>
+                    </div>
+                    <group string="Product Search">
+                        <group>
+                            <field name="search_query" placeholder="UID, alias, vendor code, technical specs, keywords"/>
+                            <field name="category_id" options="{'no_create': True}"/>
+                            <field name="subcategory_id" domain="[('parent_id', '=', category_id)]" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="selected_product_tmpl_id"/>
+                            <field name="selected_product_id"/>
+                            <field name="product_classification"/>
+                        </group>
+                    </group>
+                    <button name="action_search_products" type="object" string="Search Products" class="btn-secondary"/>
+                    <notebook>
+                        <page string="Search Results">
+                            <field name="search_result_ids">
+                                <tree create="0" delete="0" decoration-success="score &gt;= 100">
+                                    <button name="action_select_existing_product" type="object" string="Select" icon="fa-check"/>
+                                    <field name="score"/>
+                                    <field name="match_reason"/>
+                                    <field name="ti_uid"/>
+                                    <field name="product_tmpl_id"/>
+                                    <field name="category_id"/>
+                                    <field name="brand"/>
+                                    <field name="technical_specs"/>
+                                    <field name="vendor_id"/>
+                                    <field name="keyword_summary"/>
+                                    <field name="internal_reference"/>
+                                    <field name="existing_cost" groups="ti_product_intelligence.group_ti_price_cost,ti_product_intelligence.group_ti_product_manager"/>
+                                    <field name="existing_sale_price" groups="ti_product_intelligence.group_ti_price_sale,ti_product_intelligence.group_ti_product_manager"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Product Identity">
+                            <group>
+                                <group>
+                                    <field name="product_type"/>
+                                    <field name="brand"/>
+                                    <field name="vendor_id"/>
+                                    <field name="vendor_code"/>
+                                    <field name="line_uom_id"/>
+                                    <field name="revision"/>
+                                </group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="proposed_uid"/>
+                                    <field name="duplicate_blocked"/>
+                                    <field name="override_duplicate" groups="ti_product_intelligence.group_ti_product_steward,ti_product_intelligence.group_ti_product_manager"/>
+                                    <field name="override_reason" attrs="{'invisible': [('override_duplicate', '=', False)]}"/>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="material_details"/>
+                                <field name="keyword_text" placeholder="Comma-separated searchable keywords"/>
+                            </group>
+                        </page>
+                        <page string="Technical Specifications">
+                            <field name="spec_line_ids">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="attribute_id" readonly="1"/>
+                                    <field name="mandatory"/>
+                                    <field name="data_type"/>
+                                    <field name="value_char" attrs="{'invisible': [('data_type', '!=', 'char')]}"/>
+                                    <field name="value_float" attrs="{'invisible': [('data_type', '!=', 'float')]}"/>
+                                    <field name="value_id" domain="[('attribute_id', '=', attribute_id)]" attrs="{'invisible': [('data_type', '!=', 'selection')]}"/>
+                                    <field name="display_value"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sales Line" attrs="{'invisible': [('is_sale_source', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="line_quantity"/>
+                                    <field name="line_uom_id"/>
+                                    <field name="sale_price_unit"/>
+                                </group>
+                                <group>
+                                    <field name="sale_discount"/>
+                                    <field name="sale_tax_ids" widget="many2many_tags"/>
+                                    <field name="sale_customer_lead"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Purchase Line" attrs="{'invisible': [('is_purchase_source', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="line_quantity"/>
+                                    <field name="line_uom_id"/>
+                                    <field name="purchase_price_unit"/>
+                                </group>
+                                <group>
+                                    <field name="purchase_vendor_id"/>
+                                    <field name="purchase_planned_date"/>
+                                    <field name="purchase_tax_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Generated Description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                        <page string="BOM Setup" attrs="{'invisible': [('product_type', 'not in', ['finished_goods', 'bought_out'])]}">
+                            <field name="include_bom"/>
+                            <field name="bom_line_ids" attrs="{'invisible': [('include_bom', '=', False)]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="operation_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Duplicate Check">
+                            <field name="duplicate_line_ids">
+                                <tree create="0" delete="0" decoration-danger="score &gt;= 85" decoration-warning="score &gt;= 60 and score &lt; 85">
+                                    <field name="product_tmpl_id"/>
+                                    <field name="ti_uid"/>
+                                    <field name="category_id"/>
+                                    <field name="score"/>
+                                    <field name="reason"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_search_products" type="object" string="Search" class="btn-secondary"/>
+                    <button name="action_check_duplicates" type="object" string="Check Duplicates" class="btn-secondary"/>
+                    <button name="action_create_product" type="object" string="Create Product" class="btn-secondary"/>
+                    <button name="action_apply_to_order" type="object" string="Add to Order" class="btn-primary"
+                            attrs="{'invisible': [('source_model', 'not in', ['sale.order', 'purchase.order'])]}"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ti_product_creation_wizard" model="ir.actions.act_window">
+        <field name="name">Add Governed Product</field>
+        <field name="res_model">ti.product.creation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

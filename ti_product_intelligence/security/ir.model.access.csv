@@ -1,0 +1,36 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ti_product_category_user,ti.product.category user,model_ti_product_category,group_ti_product_user,1,0,0,0
+access_ti_product_category_steward,ti.product.category steward,model_ti_product_category,group_ti_product_steward,1,1,1,0
+access_ti_product_category_manager,ti.product.category manager,model_ti_product_category,group_ti_product_manager,1,1,1,1
+access_ti_product_attribute_user,ti.product.attribute user,model_ti_product_attribute,group_ti_product_user,1,0,0,0
+access_ti_product_attribute_steward,ti.product.attribute steward,model_ti_product_attribute,group_ti_product_steward,1,1,1,0
+access_ti_product_attribute_value_user,ti.product.attribute.value user,model_ti_product_attribute_value,group_ti_product_user,1,0,0,0
+access_ti_product_attribute_value_steward,ti.product.attribute.value steward,model_ti_product_attribute_value,group_ti_product_steward,1,1,1,0
+access_ti_product_spec_line_user,ti.product.spec.line user,model_ti_product_spec_line,group_ti_product_user,1,0,0,0
+access_ti_product_spec_line_steward,ti.product.spec.line steward,model_ti_product_spec_line,group_ti_product_steward,1,1,1,1
+access_ti_product_uid_rule_user,ti.product.uid.rule user,model_ti_product_uid_rule,group_ti_product_user,1,0,0,0
+access_ti_product_uid_rule_steward,ti.product.uid.rule steward,model_ti_product_uid_rule,group_ti_product_steward,1,1,1,0
+access_ti_product_alias_user,ti.product.alias user,model_ti_product_alias,group_ti_product_user,1,0,0,0
+access_ti_product_alias_steward,ti.product.alias steward,model_ti_product_alias,group_ti_product_steward,1,1,1,1
+access_ti_product_keyword_user,ti.product.keyword user,model_ti_product_keyword,group_ti_product_user,1,0,0,0
+access_ti_product_keyword_steward,ti.product.keyword steward,model_ti_product_keyword,group_ti_product_steward,1,1,1,1
+access_ti_product_duplicate_log_user,ti.product.duplicate.log user,model_ti_product_duplicate_log,group_ti_product_user,1,0,0,0
+access_ti_product_duplicate_log_steward,ti.product.duplicate.log steward,model_ti_product_duplicate_log,group_ti_product_steward,1,1,1,0
+access_ti_product_duplicate_log_manager,ti.product.duplicate.log manager,model_ti_product_duplicate_log,group_ti_product_manager,1,1,1,1
+access_product_cost_history_cost,product.cost.history cost,model_product_cost_history,group_ti_price_cost,1,0,0,0
+access_product_cost_history_manager,product.cost.history manager,model_product_cost_history,group_ti_product_manager,1,1,1,1
+access_product_sale_price_history_sale,product.sale.price.history sale,model_product_sale_price_history,group_ti_price_sale,1,0,0,0
+access_product_sale_price_history_manager,product.sale.price.history manager,model_product_sale_price_history,group_ti_product_manager,1,1,1,1
+access_ti_product_creation_wizard,ti.product.creation.wizard,model_ti_product_creation_wizard,group_ti_product_user,1,1,1,1
+access_ti_product_creation_spec_wizard,ti.product.creation.spec.wizard,model_ti_product_creation_spec_wizard,group_ti_product_user,1,1,1,1
+access_ti_product_creation_duplicate_wizard,ti.product.creation.duplicate.wizard,model_ti_product_creation_duplicate_wizard,group_ti_product_user,1,1,1,1
+access_ti_product_search_result_wizard,ti.product.search.result.wizard,model_ti_product_search_result_wizard,group_ti_product_user,1,1,1,1
+access_ti_product_bom_wizard_steward,ti.product.bom.wizard steward,model_ti_product_bom_wizard,group_ti_product_steward,1,1,1,1
+access_ti_product_bom_wizard_line_steward,ti.product.bom.wizard.line steward,model_ti_product_bom_wizard_line,group_ti_product_steward,1,1,1,1
+access_ti_product_bom_wizard_manager,ti.product.bom.wizard manager,model_ti_product_bom_wizard,group_ti_product_manager,1,1,1,1
+access_ti_product_bom_wizard_line_manager,ti.product.bom.wizard.line manager,model_ti_product_bom_wizard_line,group_ti_product_manager,1,1,1,1
+access_ti_product_merge_wizard,ti.product.merge.wizard,model_ti_product_merge_wizard,group_ti_product_steward,1,1,1,1
+access_ti_product_migration_wizard,ti.product.migration.wizard,model_ti_product_migration_wizard,group_ti_product_steward,1,1,1,1
+access_ti_missing_spec_report_user,ti.missing.spec.report user,model_ti_missing_spec_report,group_ti_product_user,1,0,0,0
+access_product_slow_move_report_user,product.slow.move.report user,model_product_slow_move_report,group_ti_product_user,1,0,0,0
+access_ti_bom_usage_report_user,ti.bom.usage.report user,model_ti_bom_usage_report,group_ti_product_user,1,0,0,0
